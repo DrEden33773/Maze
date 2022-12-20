@@ -143,7 +143,7 @@ class Map {
     coordinate get_lowest_cost(const vector<coordinate>& input) {
         struct cost_info {
             coordinate cord {};
-            int        f_cost = 0;
+            int        g_cost = 0;
             int        h_cost = 0;
             int        cost   = 0;
             cost_info()       = delete;
@@ -155,9 +155,9 @@ class Map {
         for (const coordinate& cord : input) {
             all_info.emplace_back(cord);
             cost_info& back = all_info.back();
-            back.f_cost     = m_dist(entry, back.cord);
+            back.g_cost     = m_dist(entry, back.cord);
             back.h_cost     = m_dist(back.cord, exit);
-            back.cost       = back.f_cost + back.h_cost;
+            back.cost       = back.g_cost + back.h_cost;
         }
         std::stable_sort(
             all_info.begin(),
@@ -175,7 +175,6 @@ class Map {
         );
         return all_info.front().cord;
     }
-
     list<coordinate> get_route() {
         list<coordinate> ret  = {};
         coordinate       cord = exit;
