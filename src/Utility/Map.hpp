@@ -230,9 +230,11 @@ class Map {
     void a_star_solution() {
         coordinate curr = entry;
         while (curr != exit) {
-            vector<coordinate> all_adj     = get_all_adj(curr);
-            coordinate         lowest_cost = get_lowest_cost(all_adj);
-
+            coordinate lowest_cost = get_lowest_cost(
+                get_all_adj(
+                    curr
+                )
+            );
             int x = lowest_cost.first;
             int y = lowest_cost.second;
 
