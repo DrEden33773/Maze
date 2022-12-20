@@ -1,0 +1,6 @@
+[
+{
+  "directory": "/home/eden/CollegeLearningRepo/DS_CurriculumDesign/Maze",
+  "arguments": ["/usr/local/bin/gcc", "-c", "-m64", "-std=c++20", "-o", "build/.objs/Maze/linux/x86_64/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+}]
