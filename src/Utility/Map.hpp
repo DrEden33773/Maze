@@ -27,7 +27,6 @@ namespace Utility {
 
 using std::list;
 using std::pair;
-using std::priority_queue;
 using std::queue;
 using std::unordered_set;
 using std::vector;
