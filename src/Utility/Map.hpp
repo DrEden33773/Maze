@@ -240,9 +240,8 @@ class Map {
             curr = lowest_cost;
         }
     }
-    void dfs_solution() {
-        // TODO(eden):
-    }
+    // void dfs_solution() {
+    // }
 
 public:
     /**
