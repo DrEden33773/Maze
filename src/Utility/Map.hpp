@@ -38,7 +38,7 @@ using sub_matrix = vector<T>;
 
 using coordinate = pair<int, int>;
 
-class Map {
+class Maze {
     enum class direction {
         nil, /* special case */
         up,
@@ -55,11 +55,11 @@ class Map {
         };
     };
 
-    matrix<int>       data {};
-    matrix<direction> route_data {};
-    coordinate        entry {};
-    coordinate        exit {};
-    size_t            size = 0;
+    matrix<int>       data       = {};
+    matrix<direction> route_data = {};
+    coordinate        entry      = { -1, -1 };
+    coordinate        exit       = { -1, -1 };
+    size_t            size       = 0;
 
     void init_size() {
         size = data.size();
@@ -72,6 +72,58 @@ class Map {
         );
         for (size_t i = 0; i < size; ++i) {
             route_data.emplace_back(temp);
+        }
+    }
+    void set_data(const matrix<int>& matrix) {
+        this->data = matrix;
+        init_size();
+        init_route_data();
+    }
+    void reset_data() {
+        data.clear();
+        route_data.clear();
+        size = 0;
+    }
+    void assert_map_init() const {
+        if (size == 0) {
+            throw std::runtime_error("Map has not been initialized!");
+        }
+    }
+
+    void assert_coordinate_connectivity(const coordinate& input) const {
+        int x = input.first;
+        int y = input.second;
+        if (x < 0 || x >= size || y < 0 || y >= size) {
+            throw std::out_of_range("Coordinate out of range!");
+        }
+        if (data.at(x).at(y) == 0) {
+            throw std::invalid_argument("Coordinate is not `connected`!");
+        }
+    }
+    void set_entry(const coordinate& input) {
+        assert_map_init();
+        assert_coordinate_connectivity(input);
+        this->entry = input;
+    }
+    void set_exit(const coordinate& input) {
+        assert_map_init();
+        assert_coordinate_connectivity(input);
+        this->exit = input;
+    }
+    void reset_entry() {
+        entry = { -1, -1 };
+    }
+    void reset_exit() {
+        exit = { -1, -1 };
+    }
+    void assert_entry_init() const {
+        if (entry.first == -1 || entry.second == -1) {
+            throw std::runtime_error("Entry has not been initialized!");
+        }
+    }
+    void assert_exit_init() const {
+        if (exit.first == -1 || exit.second == -1) {
+            throw std::runtime_error("Exit has not been initialized!");
         }
     }
 
@@ -188,7 +240,7 @@ class Map {
         return ret;
     }
 
-    void bfs_solution() {
+    void bfs_algo() {
         unordered_set<coordinate, CoordinateHash> visited;
         queue<coordinate>                         queue;
         queue.push(entry);
@@ -224,7 +276,7 @@ class Map {
             queue.pop();
         }
     }
-    void a_star_solution() {
+    void a_star_algo() {
         coordinate curr = entry;
         while (curr != exit) {
             coordinate lowest_cost = get_lowest_cost(
@@ -240,28 +292,93 @@ class Map {
             curr = lowest_cost;
         }
     }
-    // void dfs_solution() {
-    // }
+
+    matrix<int> export_solved_maze() {
+        matrix<int> ret = data;
+        for (const coordinate& cord : get_route()) {
+            int x           = cord.first;
+            int y           = cord.second;
+            ret.at(x).at(y) = 2;
+        }
+        return ret;
+    }
 
 public:
     /**
      * @brief Default constructor
      *
      */
-    Map() = default;
+    Maze() = default;
 
     /**
-     * @brief import from a matrix
+     * @brief create from { matrix, entry, exit }
      *
      * @param matrix
+     * @param entry
+     * @param exit
      * @return Map
      */
-    static Map import(const matrix<int>& matrix) {
-        Map ret;
-        ret.data = matrix;
-        ret.init_size();
-        ret.init_route_data();
+    static Maze create(
+        const matrix<int>& matrix,
+        const coordinate&  entry,
+        const coordinate&  exit
+    ) {
+        Maze ret;
+        ret.set_data(matrix);
+        ret.set_entry(entry);
+        ret.set_exit(exit);
         return ret;
+    }
+
+    /**
+     * @brief import from { matrix, entry, exit }
+     *
+     * @param matrix
+     * @param entry
+     * @param exit
+     */
+    void import(
+        const matrix<int>& matrix,
+        const coordinate&  entry,
+        const coordinate&  exit
+    ) {
+        set_data(matrix);
+        set_entry(entry);
+        set_exit(exit);
+    }
+
+    /**
+     * @brief reset the maze
+     *
+     */
+    void reset() {
+        reset_data();
+        reset_entry();
+        reset_exit();
+    }
+
+    /**
+     * @brief solve the maze by `bfs` algorithm
+     *
+     * @return matrix<int>
+     */
+    matrix<int> bfs_solution() {
+        assert_entry_init();
+        assert_exit_init();
+        bfs_algo();
+        return export_solved_maze();
+    }
+
+    /**
+     * @brief solve the maze by `a*` algorithm
+     *
+     * @return matrix<int>
+     */
+    matrix<int> a_star_solution() {
+        assert_entry_init();
+        assert_exit_init();
+        a_star_algo();
+        return export_solved_maze();
     }
 };
 
