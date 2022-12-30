@@ -280,20 +280,40 @@ class Maze {
             }
             queue.pop();
         }
+
+        // if reached here, no route found
+        throw std::runtime_error("No route found!");
     }
     void a_star_algo() {
+        unordered_set<coordinate, CoordinateHash> visited;
+
+        auto if_unvisited = [&](const coordinate& cord) {
+            return !visited.contains(cord);
+        };
+
         coordinate curr = entry;
+
         while (curr != exit) {
-            coordinate lowest_cost = get_lowest_cost(
-                get_all_adj(
-                    curr
-                )
-            );
+            vector<coordinate> all_adj  = get_all_adj(curr);
+            auto               filtered = all_adj | std::views::filter(if_unvisited);
+            vector<coordinate> all_unvisited_adj {
+                filtered.begin(),
+                filtered.end()
+            };
+
+            // if no unvisited adj, no route found
+            if (all_unvisited_adj.empty()) {
+                throw std::runtime_error("No route found!");
+            }
+
+            coordinate lowest_cost = get_lowest_cost(all_unvisited_adj);
+
             int x = lowest_cost.first;
             int y = lowest_cost.second;
 
             route_data.at(x).at(y) = trace_direction(lowest_cost, curr);
 
+            visited.insert(curr);
             curr = lowest_cost;
         }
     }
