@@ -245,6 +245,25 @@ class Map {
     }
 
 public:
+    /**
+     * @brief Default constructor
+     *
+     */
+    Map() = default;
+
+    /**
+     * @brief import from a matrix
+     *
+     * @param matrix
+     * @return Map
+     */
+    static Map import(const matrix<int>& matrix) {
+        Map ret;
+        ret.data = matrix;
+        ret.init_size();
+        ret.init_route_data();
+        return ret;
+    }
 };
 
 } // namespace Utility
