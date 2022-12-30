@@ -1,5 +1,5 @@
 /**
- * @file Map.hpp
+ * @file Maze.hpp
  * @author Eden (edwardwang33773@gmail.com)
  * @brief
  * @version 0.1
@@ -10,8 +10,6 @@
  */
 
 #pragma once
-
-#include "../Utility/Map.hpp"
 
 #include <memory>
 #include <stdexcept>
