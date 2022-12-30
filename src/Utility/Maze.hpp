@@ -84,9 +84,14 @@ class Maze {
         route_data.clear();
         size = 0;
     }
-    void assert_map_init() const {
-        if (size == 0) {
-            throw std::runtime_error("Map has not been initialized!");
+    void assert_data_init() const {
+        if (data.size() == 0 || data.front().size() == 0) {
+            throw std::runtime_error("Data Matrix has not been initialized!");
+        }
+    }
+    void assert_route_data_init() const {
+        if (route_data.size() == 0 || route_data.front().size() == 0) {
+            throw std::runtime_error("Route Data Matrix has not been initialized!");
         }
     }
 
@@ -101,12 +106,12 @@ class Maze {
         }
     }
     void set_entry(const coordinate& input) {
-        assert_map_init();
+        assert_data_init();
         assert_coordinate_connectivity(input);
         this->entry = input;
     }
     void set_exit(const coordinate& input) {
-        assert_map_init();
+        assert_data_init();
         assert_coordinate_connectivity(input);
         this->exit = input;
     }
@@ -310,6 +315,13 @@ public:
      */
     Maze() = default;
 
+    void assert_maze_initialized() {
+        assert_data_init();
+        assert_route_data_init();
+        assert_entry_init();
+        assert_exit_init();
+    }
+
     /**
      * @brief create from { matrix, entry, exit }
      *
@@ -331,13 +343,13 @@ public:
     }
 
     /**
-     * @brief import from { matrix, entry, exit }
+     * @brief set => { matrix, entry, exit }
      *
      * @param matrix
      * @param entry
      * @param exit
      */
-    void import(
+    void set(
         const matrix<int>& matrix,
         const coordinate&  entry,
         const coordinate&  exit
