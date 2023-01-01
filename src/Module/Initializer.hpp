@@ -48,9 +48,9 @@ class Initializer {
         this->matrix = matrix;
     }
     void show_matrix() {
-        static constexpr std::string_view SEPERATOR = "";
+        static constexpr std::string_view SEPERATOR = " ";
 
-        cout << "Here's the maze (0 for wall, 1 for path) : " << endl;
+        cout << "Here's the maze (0 for wall, 1 for available path) : " << endl;
         cout << endl;
 
         for (const auto& curr_row : matrix) {

@@ -28,6 +28,7 @@ namespace Utility {
 using std::list;
 using std::pair;
 using std::queue;
+using std::tuple;
 using std::unordered_set;
 using std::vector;
 
@@ -142,11 +143,22 @@ class Maze {
             { x, y - 1 },
             { x, y + 1 },
         };
+
+        auto if_in_range = [this](const coordinate& input) {
+            int  x             = input.first;
+            int  y             = input.second;
+            bool if_x_in_range = x >= 0 && x < size;
+            bool if_y_in_range = y >= 0 && y < size;
+            return if_x_in_range && if_y_in_range;
+        };
+
         for (const auto& cord : possible) {
-            auto x = cord.first;
-            auto y = cord.second;
-            if (data.at(x).at(y)) {
-                ret.push_back(cord);
+            if (if_in_range(cord)) {
+                auto x = cord.first;
+                auto y = cord.second;
+                if (data.at(x).at(y)) {
+                    ret.push_back(cord);
+                }
             }
         }
         return ret;
@@ -389,16 +401,18 @@ public:
         reset_exit();
     }
 
+    using result_tuple = tuple<matrix<int>, coordinate, coordinate>;
+
     /**
      * @brief solve the maze by `bfs` algorithm
      *
      * @return matrix<int>
      */
-    matrix<int> bfs_solution() {
+    result_tuple bfs_solution() {
         assert_entry_init();
         assert_exit_init();
         bfs_algo();
-        return export_solved_maze();
+        return { export_solved_maze(), entry, exit };
     }
 
     /**
@@ -406,11 +420,11 @@ public:
      *
      * @return matrix<int>
      */
-    matrix<int> a_star_solution() {
+    result_tuple a_star_solution() {
         assert_entry_init();
         assert_exit_init();
         a_star_algo();
-        return export_solved_maze();
+        return { export_solved_maze(), entry, exit };
     }
 };
 
