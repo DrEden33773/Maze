@@ -25,6 +25,7 @@ using std::cin;
 using std::cout;
 using std::endl;
 using std::pair;
+using std::string;
 using std::vector;
 using Utility::coordinate;
 
@@ -107,9 +108,11 @@ class Initializer {
     pair<int, int> input_option() {
         pair<int, int> ret = { -1, -1 };
         cout << "Please select entry and exit by input index : ";
-        int entry_idx = 0;
-        int exit_idx  = 0;
-        cin >> entry_idx >> exit_idx;
+        string entry_idx_str;
+        string exit_idx_str;
+        cin >> entry_idx_str >> exit_idx_str;
+        int entry_idx = std::stoi(entry_idx_str);
+        int exit_idx  = std::stoi(exit_idx_str);
         if (entry_idx >= 1 && entry_idx <= available_options.size()) {
             ret.first = entry_idx - 1;
         }

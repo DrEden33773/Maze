@@ -86,9 +86,26 @@ static void maze_data_file_init() {
     cout << "Successfully => Init `MazeData.txt`" << endl;
     cout << endl;
 }
+static void output_file_init() {
+    /// @attention `Solved.txt` will be created/refreshed
+
+    using std::cout;
+    using std::endl;
+    using std::fstream;
+
+    fstream solved;
+    solved.open(Filename::Solved, fstream::out | fstream::trunc);
+    if (!solved.is_open()) {
+        throw std::runtime_error("Cannot create `Solved.txt`!");
+    }
+    solved.close();
+    cout << "Successfully => Init `Solved.txt`" << endl;
+    cout << endl;
+}
 static void init_all() {
     dir_init();
     maze_data_file_init();
+    output_file_init();
 }
 
 } // namespace FileManager
