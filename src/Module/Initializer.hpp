@@ -15,19 +15,25 @@
 #include "../Utility/FileManager.hpp"
 
 #include <ostream>
+#include <stdexcept>
 #include <string_view>
 #include <vector>
 
 namespace Module {
 
+using std::cin;
 using std::cout;
 using std::endl;
+using std::pair;
 using std::vector;
 using Utility::coordinate;
 
 class Initializer {
     Utility::matrix<int> matrix {};
     vector<coordinate>   available_options {};
+
+    coordinate entry = { -1, -1 };
+    coordinate exit  = { -1, -1 };
 
     friend std::ostream& operator<<(
         std::ostream&     os,
@@ -86,6 +92,60 @@ class Initializer {
         auto it = std::unique(available_options.begin(), available_options.end());
         available_options.erase(it, available_options.end());
     }
+    void show_available_options() {
+        cout << "Here's the available options : " << endl;
+        cout << endl;
+        size_t index = 1;
+        for (const auto& curr_option : available_options) {
+            int x = curr_option.first;
+            int y = curr_option.second;
+            cout << index << ". (" << x << ", " << y << ")" << endl;
+            ++index;
+        }
+        cout << endl;
+    }
+    pair<int, int> input_option() {
+        pair<int, int> ret = { -1, -1 };
+        cout << "Please select entry and exit by input index : ";
+        int entry_idx = 0;
+        int exit_idx  = 0;
+        cin >> entry_idx >> exit_idx;
+        if (entry_idx >= 1 && entry_idx <= available_options.size()) {
+            ret.first = entry_idx - 1;
+        }
+        if (exit_idx >= 1 && exit_idx <= available_options.size()) {
+            ret.second = exit_idx - 1;
+        }
+        return ret;
+    }
+    void select_entry_and_exit() {
+        if (available_options.empty()) {
+            throw std::runtime_error("No available options!");
+        }
+        while (true) {
+            show_available_options();
+            auto [entry_idx, exit_idx] = input_option();
+            if (entry_idx == -1 || exit_idx == -1) {
+                cout << "Invalid input!" << endl;
+                cout << endl;
+                continue;
+            }
+            if (entry_idx == exit_idx) {
+                cout << "Entry and exit cannot be the same!" << endl;
+                cout << endl;
+                continue;
+            }
+            entry = available_options[entry_idx];
+            exit  = available_options[exit_idx];
+            break;
+        }
+        cout << endl;
+    }
+    void register_the_maze() {
+        Resource::set(matrix, entry, exit);
+        cout << "Successfully registered the maze, now trying to solve it..." << endl;
+        cout << endl;
+    }
 
 public:
     static void init(const Utility::matrix<int>& matrix) {
@@ -93,6 +153,8 @@ public:
         initializer.set_matrix(matrix);
         initializer.show_matrix();
         initializer.get_available_options();
+        initializer.select_entry_and_exit();
+        initializer.register_the_maze();
     }
 };
 
