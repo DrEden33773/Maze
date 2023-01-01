@@ -9,10 +9,9 @@
  *
  */
 
-#include <iostream>
+#include "TaskManager.hpp"
 
 int main(int argc, char** argv) {
-    std::cout << "hello world!" << std::endl;
-    std::cout << std::endl;
+    Task::run_all_tasks();
     return 0;
 }
