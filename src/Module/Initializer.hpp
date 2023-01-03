@@ -94,7 +94,7 @@ class Initializer {
         available_options.erase(it, available_options.end());
     }
     void show_available_options() {
-        cout << "Here's the available options : " << endl;
+        cout << "Here's the available options: " << endl;
         cout << endl;
         size_t index = 1;
         for (const auto& curr_option : available_options) {
@@ -107,7 +107,7 @@ class Initializer {
     }
     pair<int, int> input_option() {
         pair<int, int> ret = { -1, -1 };
-        cout << "Please select entry and exit by input index : ";
+        cout << "Please select entry and exit by input index >>> ";
         string entry_idx_str;
         string exit_idx_str;
         cin >> entry_idx_str >> exit_idx_str;

@@ -46,10 +46,10 @@ class Solver {
     }
     void show_mode() {
         cout << "Here's mode to solve the maze:" << endl;
-        cout << "\t"
-             << "1. BFS" << endl;
-        cout << "\t"
-             << "2. A*" << endl;
+        cout << endl;
+        cout << "1. BFS" << endl;
+        cout << "2. A*" << endl;
+        cout << endl;
         cout << "Please select a mode >>> ";
     }
     void solve_by_selected_mode() {
