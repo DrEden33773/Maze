@@ -10,8 +10,10 @@
  */
 
 #include "TaskManager.hpp"
+#include "Test/GeneratorTest.hpp"
 
 int main(int argc, char** argv) {
     Task::run_all_tasks();
+    // Test::GeneratorTest();
     return 0;
 }

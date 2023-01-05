@@ -11,6 +11,7 @@
 
 #pragma once
 
+#include "Module/Generator.hpp"
 #include "Module/Initializer.hpp"
 #include "Module/Scanner.hpp"
 #include "Module/Solver.hpp"
@@ -20,6 +21,7 @@ namespace Task {
 
 void run_all_tasks() {
     FileManager::init_all();
+    Module::Generator::generate();
     auto matrix = Module::Scanner::scan();
     Module::Initializer::init(matrix);
     Module::Solver::solve();

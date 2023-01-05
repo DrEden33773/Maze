@@ -40,6 +40,7 @@ using sub_matrix = vector<T>;
 using coordinate = pair<int, int>;
 
 class Maze {
+public:
     enum class direction {
         nil, /* special case */
         up,
@@ -56,6 +57,7 @@ class Maze {
         };
     };
 
+private:
     matrix<int>       data       = {};
     matrix<direction> route_data = {};
     coordinate        entry      = { -1, -1 };
