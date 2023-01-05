@@ -21,9 +21,12 @@ namespace Task {
 
 void run_all_tasks() {
     FileManager::init_all();
-    Module::Generator::generate();
-    auto matrix = Module::Scanner::scan();
-    Module::Initializer::init(matrix);
+    // Module::Generator::generate_matrix_only();
+    // auto matrix = Module::Scanner::matrix_scan_only();
+    // Module::Initializer::init(matrix);
+    // Module::Solver::solve();
+    Module::Generator::fully_generate();
+    Module::Scanner::full_scan_and_register();
     Module::Solver::solve();
 }
 

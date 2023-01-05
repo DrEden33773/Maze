@@ -16,8 +16,13 @@
 
 namespace Module {
 
+using std::cout;
+using std::endl;
+
 class Scanner {
-    Utility::matrix<int> matrix {};
+    Utility::matrix<int> matrix = {};
+    Utility::coordinate  entry  = { -1, -1 };
+    Utility::coordinate  exit   = { -1, -1 };
 
     void assert_matrix_non_empty() const {
         if (matrix.empty()) {
@@ -33,7 +38,7 @@ class Scanner {
         }
     }
 
-    void scan_from_file() {
+    void scan_matrix_from_file() {
         std::ifstream file { FileManager::Filename::MazeData };
         if (!file.is_open()) {
             throw std::runtime_error("file is not open");
@@ -58,12 +63,81 @@ class Scanner {
         std::cout << "Scan from file successfully!" << std::endl;
         std::cout << std::endl;
     }
+    void full_scan_from_file() {
+        static constexpr const char* DROP_SIGN    = "#";
+        static constexpr int         line_of_tips = 10;
+
+        std::ifstream file { FileManager::Filename::MazeData };
+        if (!file.is_open()) {
+            throw std::runtime_error("file is not open");
+        }
+
+        // pass first 10 lines
+        std::string line;
+        for (int i = 0; i < line_of_tips; ++i) {
+            std::getline(file, line);
+        }
+        // get the size of maze
+        int size = 0;
+        file >> size;
+        // import the matrix
+        matrix = Utility::matrix<int>(
+            size,
+            std::vector<int>(size, 0)
+        );
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                file >> matrix[i][j];
+            }
+        }
+        // import the entry
+        file >> entry.first >> entry.second;
+        // import the exit
+        file >> exit.first >> exit.second;
+    }
+    void register_the_maze() {
+        Resource::set(matrix, entry, exit);
+        cout << "Successfully registered the maze..." << endl;
+        cout << endl;
+    }
+    void show_the_maze_info() {
+        cout << "We'll first show you the info of current maze: " << endl;
+        cout << endl;
+        // 1. size
+        cout << "size => " << matrix.size() << endl;
+        cout << endl;
+        // 2. matrix
+        cout << "matrix (0 for wall, 1 for available path) :" << endl;
+        cout << endl;
+        for (const auto& vec : matrix) {
+            for (auto num : vec) {
+                cout << num << " ";
+            }
+            cout << endl;
+        }
+        cout << endl;
+        // 3. entry
+        cout << "entry => (" << entry.first << ", " << entry.second << ")" << endl;
+        cout << endl;
+        // 4. exit
+        cout << "exit => (" << exit.first << ", " << exit.second << ")" << endl;
+        cout << endl;
+        // 5. tips
+        cout << "Now, we'll try to solve the maze..." << endl;
+        cout << endl;
+    }
 
 public:
-    static auto scan() {
+    static auto matrix_scan_only() {
         Scanner scanner;
-        scanner.scan_from_file();
+        scanner.scan_matrix_from_file();
         return scanner.matrix;
+    }
+    static void full_scan_and_register() {
+        Scanner scanner;
+        scanner.full_scan_from_file();
+        scanner.register_the_maze();
+        scanner.show_the_maze_info();
     }
 };
 

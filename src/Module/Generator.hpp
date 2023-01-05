@@ -36,7 +36,7 @@ using Utility::matrix;
 
 class Generator {
     /// @brief size of the maze (should always be odd number)
-    static constexpr int size = 25;
+    static constexpr int size = 20;
 
     /// @brief the row data of maze to be generated (0 for wall, 1 for path)
     matrix<int> data;
@@ -162,7 +162,45 @@ class Generator {
             }
             file << endl;
         }
+        file << endl;
         file.close();
+    }
+    void write_everything_into_file() {
+        static constexpr const char* SIGN = "# ";
+
+        fstream file;
+        file.open(FileManager::Filename::MazeData, fstream::out);
+        if (!file.is_open()) {
+            throw std::runtime_error("Cannot open file");
+        }
+        // 1. how to use the file (10 lines)
+        file << SIGN << "This file is composed by 4 parts: " << endl;
+        file << endl;
+        file << SIGN << "1. size of maze (an integer)" << endl;
+        file << SIGN << "2. the maze data (a matrix with 0 for wall, 1 for path)" << endl;
+        file << SIGN << "3. the entry (two integer starts from 0, separated in <space>)" << endl;
+        file << SIGN << "4. the exit (two integer starts from 0, separated in <space>)" << endl;
+        file << endl;
+        file << SIGN << "Different part should be separated by a blank line" << endl;
+        file << SIGN << "Here are the meta data: " << endl;
+        file << endl;
+        // 2. size of the maze (2 lines)
+        file << size << endl;
+        file << endl;
+        // 3. matrix (size + 1 lines)
+        for (const auto& row : data) {
+            for (auto curr : row) {
+                file << curr << " ";
+            }
+            file << endl;
+        }
+        file << endl;
+        // 4. entry (2 lines)
+        file << entry.first << " " << entry.second << endl;
+        file << endl;
+        // 5. exit (2 lines)
+        file << exit.first << " " << exit.second << endl;
+        file << endl;
     }
 
 public:
@@ -171,10 +209,15 @@ public:
         generator.generate_maze();
         generator.output_matrix_for_test();
     }
-    static void generate() {
+    static void generate_matrix_only() {
         Generator generator;
         generator.generate_maze();
         generator.write_matrix_into_file();
+    }
+    static void fully_generate() {
+        Generator generator;
+        generator.generate_maze();
+        generator.write_everything_into_file();
     }
 };
 
