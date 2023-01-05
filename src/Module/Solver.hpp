@@ -26,23 +26,26 @@ using Utility::coordinate;
 using Utility::matrix;
 
 class Solver {
-    matrix<int> answer = {};
-    coordinate  entry  = { -1, -1 };
-    coordinate  exit   = { -1, -1 };
+    matrix<int> answer           = {};
+    coordinate  entry            = { -1, -1 };
+    coordinate  exit             = { -1, -1 };
+    bool        if_have_solution = true;
 
     void solve_by_bfs() {
-        auto&& [_answer, _entry, _exit]
+        auto&& [_if_have_solution, _answer, _entry, _exit]
             = Resource::get()->bfs_solution();
-        answer = std::move(_answer);
-        entry  = std::move(_entry);
-        exit   = std::move(_exit);
+        if_have_solution = _if_have_solution;
+        answer           = std::move(_answer);
+        entry            = std::move(_entry);
+        exit             = std::move(_exit);
     }
     void solve_by_a_star() {
-        auto&& [_answer, _entry, _exit]
+        auto&& [_if_have_solution, _answer, _entry, _exit]
             = Resource::get()->a_star_solution();
-        answer = std::move(_answer);
-        entry  = std::move(_entry);
-        exit   = std::move(_exit);
+        if_have_solution = _if_have_solution;
+        answer           = std::move(_answer);
+        entry            = std::move(_entry);
+        exit             = std::move(_exit);
     }
     void show_mode() {
         cout << "Here's mode to solve the maze:" << endl;
@@ -80,6 +83,13 @@ class Solver {
             throw std::runtime_error("Cannot open output file");
         }
 
+        if (if_have_solution) {
+            output << "Successfully solved the maze!" << endl;
+        } else {
+            output << "Cannot solve the maze! But we could show the original data." << endl;
+        }
+        output << endl;
+
         output << "Here's the maze (0 for wall, 1 for available path, * for picked path) : " << endl;
         output << endl;
 
@@ -102,8 +112,14 @@ class Solver {
 
         output.close();
 
-        cout << "Solved maze has been written into => "
-             << FileManager::fs::absolute(FileManager::Filename::Solved) << endl;
+        if (if_have_solution) {
+            cout << "Solved maze has been written into => " << endl;
+        } else {
+            cout << "Maze cannot be solved."
+                 << " However, the original data has been copied to => "
+                 << endl;
+        }
+        cout << FileManager::fs::absolute(FileManager::Filename::Solved) << endl;
         cout << endl;
     }
 

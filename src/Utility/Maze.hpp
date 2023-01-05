@@ -58,11 +58,12 @@ public:
     };
 
 private:
-    matrix<int>       data       = {};
-    matrix<direction> route_data = {};
-    coordinate        entry      = { -1, -1 };
-    coordinate        exit       = { -1, -1 };
-    size_t            size       = 0;
+    matrix<int>       data             = {};
+    matrix<direction> route_data       = {};
+    coordinate        entry            = { -1, -1 };
+    coordinate        exit             = { -1, -1 };
+    size_t            size             = 0;
+    bool              if_have_solution = true;
 
     void init_size() {
         size = data.size();
@@ -296,7 +297,9 @@ private:
         }
 
         // if reached here, no route found
-        throw std::runtime_error("No route found!");
+        // throw std::runtime_error("No route found!");
+        if_have_solution = false;
+        return;
     }
     void a_star_algo() {
         unordered_set<coordinate, CoordinateHash> visited;
@@ -317,7 +320,9 @@ private:
 
             // if no unvisited adj, no route found
             if (all_unvisited_adj.empty()) {
-                throw std::runtime_error("No route found!");
+                // throw std::runtime_error("No route found!");
+                if_have_solution = false;
+                return;
             }
 
             coordinate lowest_cost = get_lowest_cost(all_unvisited_adj);
@@ -403,7 +408,7 @@ public:
         reset_exit();
     }
 
-    using result_tuple = tuple<matrix<int>, coordinate, coordinate>;
+    using result_tuple = tuple<bool, matrix<int>, coordinate, coordinate>;
 
     /**
      * @brief solve the maze by `bfs` algorithm
@@ -414,7 +419,10 @@ public:
         assert_entry_init();
         assert_exit_init();
         bfs_algo();
-        return { export_solved_maze(), entry, exit };
+        if (!if_have_solution) {
+            return { false, data, entry, exit };
+        }
+        return { true, export_solved_maze(), entry, exit };
     }
 
     /**
@@ -426,7 +434,10 @@ public:
         assert_entry_init();
         assert_exit_init();
         a_star_algo();
-        return { export_solved_maze(), entry, exit };
+        if (!if_have_solution) {
+            return { false, data, entry, exit };
+        }
+        return { true, export_solved_maze(), entry, exit };
     }
 };
 
