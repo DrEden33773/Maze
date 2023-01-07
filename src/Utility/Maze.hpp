@@ -413,7 +413,7 @@ public:
     /**
      * @brief solve the maze by `bfs` algorithm
      *
-     * @return matrix<int>
+     * @return tuple<bool, matrix<int>, coordinate, coordinate>
      */
     result_tuple bfs_solution() {
         assert_entry_init();
@@ -428,7 +428,7 @@ public:
     /**
      * @brief solve the maze by `a*` algorithm
      *
-     * @return matrix<int>
+     * @return tuple<bool, matrix<int>, coordinate, coordinate>
      */
     result_tuple a_star_solution() {
         assert_entry_init();
