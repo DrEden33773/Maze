@@ -98,7 +98,10 @@ class Generator {
             int        y   = top.second;
             // all neighbors
             vector<coordinate> all_neighbors = {
-                { x - 2, y }, { x + 2, y }, { x, y - 2 }, { x, y + 2 }
+                { x - 2, y },
+                { x + 2, y },
+                { x, y - 2 },
+                { x, y + 2 },
             };
             // filter
             auto available = all_neighbors
