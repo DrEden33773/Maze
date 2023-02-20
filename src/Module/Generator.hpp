@@ -35,8 +35,8 @@ using Utility::coordinate;
 using Utility::matrix;
 
 class Generator {
-    /// @brief size of the maze (should always be odd number)
-    static constexpr int size = 20;
+    /// @brief size of the maze (it's best be odd number)
+    static constexpr int size = 23;
 
     /// @brief the row data of maze to be generated (0 for wall, 1 for path)
     matrix<int> data;
